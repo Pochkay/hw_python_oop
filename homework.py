@@ -13,7 +13,7 @@ class InfoMessage:
     calories: float
     info: str = constants.INFO_MESSAGE
 
-    def get_massage(self) -> str:
+    def get_message(self) -> str:
         """Вывод сообщения о тренировке"""
         return self.info.format(**asdict(self))
 
@@ -76,7 +76,7 @@ class SportsWalking(Training):
             
     def get_spent_calories(self) -> float:
         """Рассчет потраченных калорий"""
-        return (constants.COEFF_CALORIE_wlk_1 * self.weight + (self.get_mean_speed() * constants.COEFF_CALORIE_wlk_2 // self.height) * constants.COEFF_CALORIE_wlk_3 * self.weight * self.duration)
+        return (constants.COEFF_CALORIE_wlk_1 * self.weight + (self.get_mean_speed() ** constants.COEFF_CALORIE_wlk_2 // self.height) * constants.COEFF_CALORIE_wlk_3 * self.weight * self.duration*constants.M_IN_H)
 
 class Swimming(Training):
     """Тренировка: плавание."""
@@ -113,10 +113,10 @@ def read_package(workout_type: str, data: list) -> Training:
         "WLK": SportsWalking}
     return train_dict[workout_type](*data)    
 
-def main(training: Training) -> None:
+def main(training: Union[Training, Running, Swimming, SportsWalking]) -> None:
     """Главная функция."""
-    info = training.show_training_info()
-    print(info.get_massage())
+    
+    print(training.show_training_info().get_message())
 
 if __name__ == '__main__':
     packages = [
