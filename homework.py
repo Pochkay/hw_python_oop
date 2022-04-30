@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict
-from typing import Union
+from typing import Union, Dict
 
 import constants
 
@@ -31,7 +31,6 @@ class Training:
         self.action = action
         self.duration = duration
         self.weight = weight
-        self.calories = None
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -57,21 +56,19 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float) -> None:
-        super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
         """Расчет потраченных калорий"""
-        return ((constants.COEFF_CALORIE_run_1
+        M_IN_H: int = 60
+        return (
+            (
+                constants.COEFF_CALORIE_RUN_1
                 * self.get_mean_speed()
-                - constants.COEFF_CALORIE_run_2)
+                - constants.COEFF_CALORIE_RUN_2)
                 * self.weight
                 / constants.M_IN_KM
                 * (self.duration
-                * constants.M_IN_H))
+                * M_IN_H))
 
 
 class SportsWalking(Training):
@@ -86,13 +83,14 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         """Рассчет потраченных калорий"""
-        return ((constants.COEFF_CALORIE_wlk_1
+        M_IN_H: int = 60
+        return ((constants.COEFF_CALORIE_WLK_1
                 * self.weight
                 + (self.get_mean_speed() ** 2 // self.height)
-                * constants.COEFF_CALORIE_wlk_2
+                * constants.COEFF_CALORIE_WLK_2
                 * self.weight)
                 * self.duration
-                * constants.M_IN_H)
+                * M_IN_H)
 
 
 class Swimming(Training):
@@ -123,13 +121,13 @@ class Swimming(Training):
     def get_spent_calories(self) -> float:
         """Рассчет потраченных калорий при плаванье"""
 
-        return ((self.get_mean_speed() + constants.COEFF_CALORIE_swm_1)
-                * constants.COEFF_CALORIE_swm_2 * self.weight)
+        return ((self.get_mean_speed() + constants.COEFF_CALORIE_SWM_1)
+                * constants.COEFF_CALORIE_SWM_2 * self.weight)
 
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    train_dict = {
+    train_dict: Dict[str, Swimming, Running, SportsWalking] = {
         "SWM": Swimming,
         "RUN": Running,
         "WLK": SportsWalking}
