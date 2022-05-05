@@ -1,6 +1,7 @@
 LEN_STROKE: float = 1.38
 M_IN_KM: int = 1000
 LEN_STEP: float = 0.65
+M_IN_H: float = 60
 COEFF_CALORIE_RUN_1: int = 18
 COEFF_CALORIE_RUN_2: int = 20
 COEFF_CALORIE_WLK_1: float = 0.035
